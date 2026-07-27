@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USDTFlasher   Flash USDT Sender</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0F19;--s1:#131929;--s2:#1A2235;--s3:#222D42;
+  --gr:#00D878;--gr2:#00A85A;--grl:rgba(0,216,120,0.12);--grg:rgba(0,216,120,0.06);
+  --tx:#C9D1DC;--tx2:#7A8494;--tx3:#3E4859;
+  --bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.04);
+  --sel-border:rgba(0,216,120,0.6);--sel-bg:rgba(0,216,120,0.10);
+  --rd:10px;--rd2:16px;--rd3:20px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:60px;background:rgba(11,15,25,0.88);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--bd)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--gr);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px;fill:none;stroke:var(--bg);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.logo-text{font-size:14px;font-weight:700;color:var(--tx);letter-spacing:-.2px}
+.logo-text em{color:var(--gr);font-style:normal}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-size:13px;color:var(--tx2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--tx)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-btn-ghost{background:transparent;border:0.5px solid var(--bd);color:var(--tx2);padding:7px 16px;border-radius:var(--rd);font-size:13px;cursor:pointer;transition:all .15s}
+.nav-btn-ghost:hover{border-color:var(--tx3);color:var(--tx)}
+.nav-btn{background:var(--gr);color:var(--bg);border:none;padding:7px 18px;border-radius:var(--rd);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.nav-btn:hover{background:var(--gr2)}
+.whatsapp-btn{position:fixed;right:22px;bottom:22px;z-index:250;display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#061b0f;padding:11px 16px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(37,211,102,.25);transition:transform .18s,box-shadow .18s}
+.whatsapp-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(37,211,102,.35)}
+.whatsapp-btn svg{width:18px;height:18px;fill:currentColor}
+
+/* HERO */
+.hero{padding:130px 36px 80px;max-width:1000px;margin:0 auto;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--grl);border:0.5px solid rgba(0,216,120,0.2);color:var(--gr);padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:32px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gr);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-headline{font-size:clamp(36px,6vw,62px);font-weight:800;letter-spacing:-2px;line-height:1.1;color:var(--tx);margin-bottom:20px}
+.hero-headline em{color:var(--gr);font-style:normal}
+.hero-sub{font-size:17px;color:var(--tx2);max-width:480px;margin:0 auto 36px;line-height:1.75}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
+.btn-primary{background:var(--gr);color:var(--bg);border:none;padding:14px 30px;border-radius:var(--rd);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s}
+.btn-primary:hover{background:var(--gr2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,216,120,0.22)}
+.btn-ghost{background:transparent;border:0.5px solid var(--bd);color:var(--tx);padding:14px 30px;border-radius:var(--rd);font-size:14px;cursor:pointer;transition:all .15s}
+.btn-ghost:hover{border-color:var(--tx3);background:var(--s2)}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pill{background:var(--s1);border:0.5px solid var(--bd);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:var(--gr);flex-shrink:0}
+
+.section-divider{height:0.5px;background:var(--bd);margin:0 36px}
+.section{padding:72px 36px;max-width:980px;margin:0 auto}
+.sec-label{font-size:10px;font-weight:700;color:var(--gr);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-1px;color:var(--tx);margin-bottom:12px;line-height:1.15}
+.sec-sub{font-size:15px;color:var(--tx2);max-width:440px;line-height:1.75}
+
+/* FEATURES STRIP */
+.features-strip{background:var(--s1);border-top:0.5px solid var(--bd);border-bottom:0.5px solid var(--bd);padding:32px 36px}
+.features-inner{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.feat-item{padding:0 28px;border-right:0.5px solid var(--bd);text-align:center}
+.feat-item:first-child{padding-left:0}
+.feat-item:last-child{border-right:none;padding-right:0}
+.feat-n{font-size:26px;font-weight:800;color:var(--tx);letter-spacing:-1px;margin-bottom:2px}
+.feat-n em{color:var(--gr);font-style:normal}
+.feat-l{font-size:11px;color:var(--tx3)}
+
+/* HOW IT WORKS */
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:40px}
+.step-card{background:var(--s1);border:0.5px solid var(--bd2);border-radius:var(--rd2);padding:28px;transition:border-color .2s,background .2s}
+.step-card:hover{border-color:rgba(0,216,120,.2);background:var(--s2)}
+.step-card.hi{border-color:rgba(0,216,120,.18);background:rgba(0,216,120,.04)}
+.step-n{font-size:10px;font-weight:700;color:var(--gr);letter-spacing:2px;margin-bottom:16px}
+.step-ico{width:40px;height:40px;border-radius:10px;background:var(--grl);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.step-ico svg{width:20px;height:20px;stroke:var(--gr);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.step-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:6px}
+.step-desc{font-size:13px;color:var(--tx2);line-height:1.65}
+
+/* PRICING */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:40px}
+.plan-card{background:var(--s1);border:0.5px solid var(--bd2);border-radius:var(--rd2);padding:26px;display:flex;flex-direction:column;transition:border-color .2s;position:relative}
+.plan-card:hover{border-color:var(--bd)}
+.plan-card.featured{border-color:rgba(0,216,120,.38);background:rgba(0,216,120,.04)}
+.featured-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gr);color:var(--bg);font-size:9px;font-weight:800;letter-spacing:1.5px;padding:3px 12px;border-radius:0 0 9px 9px;white-space:nowrap}
+.plan-name{font-size:11px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;margin-top:6px}
+.plan-from{font-size:11px;color:var(--tx3);margin-bottom:2px}
+.plan-price{font-size:30px;font-weight:800;letter-spacing:-1px;color:var(--tx);margin-bottom:18px}
+.plan-price span{font-size:12px;font-weight:400;color:var(--tx3)}
+.plan-rows{flex:1;display:flex;flex-direction:column;margin-bottom:20px}
+.plan-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--bd2);font-size:13px}
+.plan-row:last-child{border-bottom:none}
+.plan-row .lbl{color:var(--tx2)}
+.plan-row .val{color:var(--tx);font-weight:500}
+.plan-row .val.hi{color:var(--gr)}
+.plan-btn{width:100%;padding:11px;border-radius:var(--rd);font-size:13px;font-weight:600;cursor:pointer;border:0.5px solid var(--bd);background:transparent;color:var(--tx);transition:all .15s}
+.plan-btn:hover{background:var(--s3);border-color:var(--tx3)}
+.plan-card.featured .plan-btn{background:var(--gr);color:var(--bg);border-color:var(--gr)}
+.plan-card.featured .plan-btn:hover{background:var(--gr2)}
+
+/* FAQ */
+.faq-wrap{margin-top:36px;border:0.5px solid var(--bd2);border-radius:var(--rd2);overflow:hidden}
+.faq-item{border-bottom:0.5px solid var(--bd2)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:18px 22px;font-size:14px;font-weight:500;color:var(--tx);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:background .15s}
+.faq-q:hover{background:var(--s2)}
+.faq-chevron{width:18px;height:18px;flex-shrink:0;stroke:var(--tx3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s}
+.faq-item.open .faq-chevron{transform:rotate(180deg)}
+.faq-a{font-size:13px;color:var(--tx2);line-height:1.75;padding:0 22px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
+.faq-item.open .faq-a{max-height:200px;padding:0 22px 18px}
+
+/* OFFER */
+.offer-band{background:linear-gradient(135deg,rgba(0,216,120,.08),rgba(0,168,90,.03));border:0.5px solid rgba(0,216,120,.18);border-radius:var(--rd3);padding:52px 40px;text-align:center;margin:0 36px 72px}
+.offer-band h2{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.offer-band p{font-size:15px;color:var(--tx2);margin-bottom:28px}
+.offer-band strong{color:var(--gr)}
+footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font-size:12px;color:var(--tx3)}
+
+/* ═══ OVERLAY / MODAL ═══ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .2s;padding:12px}
+.overlay.show{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:0.5px solid var(--bd);border-radius:var(--rd3);width:100%;max-width:430px;max-height:92vh;overflow-y:auto;transform:translateY(14px) scale(.98);transition:transform .22s;box-shadow:0 40px 100px rgba(0,0,0,.85)}
+.overlay.show .modal{transform:none}
+
+.m-hdr{padding:22px 24px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.m-plan-lbl{font-size:10px;font-weight:700;color:var(--gr);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px}
+.m-plan-name{font-size:20px;font-weight:800;color:var(--tx);letter-spacing:-.5px}
+.m-close{width:30px;height:30px;border-radius:50%;background:var(--s2);border:0.5px solid var(--bd2);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .15s}
+.m-close:hover{background:var(--s3);color:var(--tx)}
+
+/* DUR TABS */
+.dur-tabs{display:flex;gap:5px;padding:16px 24px 0}
+.dur-tab{flex:1;padding:9px 4px;border-radius:9px;border:0.5px solid var(--bd2);background:transparent;color:var(--tx2);font-size:11px;font-weight:500;cursor:pointer;transition:all .18s;text-align:center}
+.dur-tab:hover{background:var(--s2);color:var(--tx);border-color:var(--bd)}
+.dur-tab.active{border-color:var(--sel-border);background:var(--sel-bg);color:var(--gr);font-weight:700;box-shadow:0 0 0 1px rgba(0,216,120,0.15)}
+.dur-sav{display:block;font-size:9px;margin-top:2px;color:var(--tx3)}
+.dur-tab.active .dur-sav{color:rgba(0,216,120,.55)}
+
+/* ORDER BOX */
+.order-box{margin:14px 24px 0;background:var(--s2);border:0.5px solid var(--bd2);border-radius:12px;padding:14px}
+.ob-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.ob-row:last-child{margin:0;border-top:0.5px solid var(--bd2);padding-top:10px;margin-top:6px}
+.ob-row .ol{color:var(--tx2)}
+.ob-row .ov{color:var(--tx);font-weight:500}
+.ob-row .ov.big{font-size:20px;font-weight:800;color:var(--tx)}
+
+/* STEP INDICATOR */
+.step-ind{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 24px 0}
+.si{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--tx3)}
+.si.active{color:var(--tx2)}
+.si.done{color:var(--gr)}
+.si-dot{width:20px;height:20px;border-radius:50%;border:0.5px solid var(--bd2);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.si.active .si-dot{border-color:var(--gr);background:var(--grl);color:var(--gr)}
+.si.done .si-dot{border-color:var(--gr);background:var(--gr);color:var(--bg)}
+.si-line{width:22px;height:0.5px;background:var(--bd2)}
+.si-line.done{background:var(--gr)}
+
+.m-screen{padding:16px 24px 24px}
+
+/* NETWORK CARDS */
+.net-label{font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.net-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.net-card{background:var(--s2);border:0.5px solid var(--bd2);border-radius:12px;padding:14px;cursor:pointer;transition:border-color .18s,background .18s;position:relative}
+.net-card:hover{border-color:var(--bd);background:var(--s3)}
+.net-card.active{border-color:var(--sel-border);background:var(--sel-bg);box-shadow:0 0 0 1px rgba(0,216,120,0.12)}
+.net-card.active::after{content:'✓';position:absolute;top:9px;right:11px;font-size:10px;color:var(--gr);font-weight:800}
+.net-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.net-name{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:2px;transition:color .15s}
+.net-card.active .net-name{color:var(--gr)}
+.net-sub{font-size:11px;color:var(--tx3);line-height:1.4}
+
+/* TOKEN BUTTONS */
+.tok-row{display:flex;gap:5px;margin-bottom:4px}
+.tok-btn{flex:1;padding:9px;border-radius:8px;border:0.5px solid var(--bd2);background:transparent;color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;transition:all .18s;text-align:center}
+.tok-btn:hover{background:var(--s2);color:var(--tx);border-color:var(--bd)}
+.tok-btn.active{border-color:var(--sel-border);background:var(--sel-bg);color:var(--gr);font-weight:700;box-shadow:0 0 0 1px rgba(0,216,120,0.12)}
+.tok-note{font-size:11px;color:var(--tx3);margin-top:5px;margin-bottom:14px}
+
+.next-btn{width:100%;padding:13px;background:var(--gr);color:var(--bg);border:none;border-radius:var(--rd);font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;margin-top:4px}
+.next-btn:hover{background:var(--gr2)}
+
+/* PAY SCREEN */
+.pay-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sel-bg);border:0.5px solid var(--sel-border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--tx2);margin-bottom:14px}
+.pay-badge strong{color:var(--gr)}
+.qr-outer{background:#fff;border-radius:12px;padding:12px;display:inline-block;margin-bottom:14px}
+
+/* EXACT AMOUNT BOX */
+.exact-amount-box{background:var(--s2);border:1.5px solid var(--sel-border);border-radius:12px;padding:14px 16px;margin-bottom:9px;position:relative}
+.exact-amount-box::before{content:'EXACT AMOUNT';position:absolute;top:-1px;left:12px;transform:translateY(-50%);background:var(--s1);padding:0 6px;font-size:9px;font-weight:700;color:var(--gr);letter-spacing:1.5px}
+.exact-amount-inner{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.exact-amount-val{font-size:26px;font-weight:800;color:var(--gr);font-variant-numeric:tabular-nums;letter-spacing:-0.5px}
+.exact-amount-tok{font-size:13px;font-weight:600;color:var(--tx2)}
+.exact-note{font-size:11px;color:var(--tx3);margin-top:6px}
+.exact-note strong{color:var(--tx2)}
+
+.addr-box{background:var(--s2);border:0.5px solid var(--bd2);border-radius:10px;padding:12px 14px;margin-bottom:9px}
+.addr-lbl{font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.addr-val{font-size:11px;color:var(--tx);word-break:break-all;font-family:'SF Mono',Monaco,monospace;line-height:1.5}
+.copy-btn{width:100%;padding:9px;margin-top:9px;border-radius:8px;border:0.5px solid var(--bd2);background:transparent;color:var(--tx2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:var(--s3);color:var(--tx)}
+.copy-btn.copied{border-color:var(--sel-border);color:var(--gr);background:var(--sel-bg)}
+
+/* TX ID badge */
+.txid-box{background:rgba(0,216,120,0.05);border:0.5px solid rgba(0,216,120,0.18);border-radius:9px;padding:10px 14px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.txid-label{font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px}
+.txid-val{font-size:11px;color:var(--gr);font-family:'SF Mono',Monaco,monospace;font-weight:600}
+
+.warn-box{background:rgba(218,142,50,.07);border:0.5px solid rgba(218,142,50,.28);border-radius:10px;padding:12px 14px;font-size:12px;color:#e0a44a;line-height:1.65;margin-bottom:12px}
+.warn-box strong{display:block;margin-bottom:3px}
+.pay-footer{display:flex;align-items:center;justify-content:space-between}
+.pay-timer{font-size:12px;color:var(--tx3)}
+.pay-timer span{color:var(--tx2);font-weight:600;font-variant-numeric:tabular-nums}
+.back-btn{background:transparent;border:0.5px solid var(--bd2);color:var(--tx2);font-size:12px;padding:7px 14px;border-radius:8px;cursor:pointer;transition:all .15s}
+.back-btn:hover{border-color:var(--bd);color:var(--tx)}
+.center{text-align:center}
+</style>
+</head>
+<body>
+
+<a class="whatsapp-btn" href="https://wa.me/12897917408?text=Hello%2C%20I%27d%20like%20more%20information%20about%20the%20license." target="_blank" rel="noopener noreferrer" aria-label="Contact us on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.9 9.9 0 0 0-8.55 14.9L2 22l5.25-1.38A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.08-1.12l-.29-.17-3.12.82.83-3.04-.19-.31A8 8 0 1 1 12 20Zm4.39-5.98c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.68 2.56 4.07 3.59.57.25 1.01.4 1.35.51.57.18 1.09.16 1.5.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+  WhatsApp
+</a>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="3" y2="14"/><line x1="8" y1="2" x2="13" y2="14"/><line x1="5" y1="9" x2="11" y2="9"/></svg>
+    </div>
+    <span class="logo-text">USDT<em>Flasher</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-btn-ghost" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">View plans</button>
+    <button class="nav-btn" onclick="openModal('enterprise')">Get license</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Flash USDT Sender</div>
+  <h1 class="hero-headline">Generate and send<br><em>Flash USDT</em></h1>
+  <p class="hero-sub">Using the app is effortless. Simply launch it, paste the destination address, specify the amount, and you're done. Flashed instantly.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="openModal('lite')">Get License Now</button>
+    <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+  </div>
+  <div class="hero-pills">
+    <div class="pill"><div class="pill-dot"></div>Available for all devices</div>
+    <div class="pill"><div class="pill-dot"></div>Unlimited transfer jumps</div>
+    <div class="pill"><div class="pill-dot"></div>Valid for 365 days</div>
+    <div class="pill"><div class="pill-dot"></div>P2P sellable</div>
+  </div>
+</section>
+
+<!-- FEATURES STRIP -->
+<div class="features-strip">
+  <div class="features-inner">
+    <div class="feat-item"><div class="feat-n"><em>365</em>d</div><div class="feat-l">Flash validity</div></div>
+    <div class="feat-item"><div class="feat-n"><em>∞</em></div><div class="feat-l">Transfer jumps</div></div>
+    <div class="feat-item"><div class="feat-n"><em>All</em></div><div class="feat-l">Wallets supported</div></div>
+    <div class="feat-item"><div class="feat-n">P<em>2</em>P</div><div class="feat-l">Recommended use</div></div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- HOW IT WORKS -->
+<div id="how" class="section">
+  <div class="sec-label">How To Start</div>
+  <div class="sec-title">How It Works</div>
+  <p class="sec-sub">After granting access to the app you will face with a simple step by step interface. You just need to fill the information with your requirements, press the transfer button and boom   Flashed USDT.</p>
+  <div class="steps-grid">
+    <div class="step-card hi">
+      <div class="step-n">STEP 01</div>
+      <div class="step-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+      <div class="step-title">Grant Access</div>
+      <div class="step-desc">Reach out to us via the contact information provided on our website or go to the Licenses Section and acquire a license plan.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-n">STEP 02</div>
+      <div class="step-ico"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+      <div class="step-title">Activate License</div>
+      <div class="step-desc">After getting a license, insert your license key and activation code in the License Activation Section and click "Activate".</div>
+    </div>
+    <div class="step-card">
+      <div class="step-n">STEP 03</div>
+      <div class="step-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg></div>
+      <div class="step-title">Run App</div>
+      <div class="step-desc">After activating the license you'll be in your flash sender portal, where you can start making your flash USDT sendings.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-n">STEP 04</div>
+      <div class="step-ico"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9"/></svg></div>
+      <div class="step-title">Start Sending Flash USDT</div>
+      <div class="step-desc">Follow the app's intuitive interface. Insert your destination wallet, specify the amount you want to send, and complete the transaction.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- PRICING -->
+<div id="pricing" class="section">
+  <div class="sec-label">Get Access</div>
+  <div class="sec-title">Flash USDT Sender</div>
+  <p class="sec-sub">Follow the guide to get access to the App. Stop wasting time and let's Flash!</p>
+  <div class="plans-grid">
+
+    <div class="plan-card">
+      <div class="plan-name">Elite License</div>
+      <div class="plan-from">Starting from</div>
+      <div class="plan-price">$1,500 <span>/ day</span></div>
+      <div class="plan-rows">
+        <div class="plan-row"><span class="lbl">1 day</span><span class="val">$1,500 · 500k flash limit</span></div>
+        <div class="plan-row"><span class="lbl">7 days</span><span class="val">$4,500 · 10M flash limit</span></div>
+        <div class="plan-row"><span class="lbl">1 month</span><span class="val hi">$15,000 · 150M flash limit</span></div>
+      </div>
+      <button class="plan-btn" onclick="openModal('elite')">Buy Now</button>
+    </div>
+
+    <div class="plan-card featured">
+      <div class="featured-badge">MOST POPULAR</div>
+      <div class="plan-name">Lite License</div>
+      <div class="plan-from">Starting from</div>
+      <div class="plan-price">$100 <span>/ day</span></div>
+      <div class="plan-rows">
+        <div class="plan-row"><span class="lbl">1 day</span><span class="val">$100 · 1k flash limit</span></div>
+        <div class="plan-row"><span class="lbl">7 days</span><span class="val">$500 · 10k flash limit</span></div>
+        <div class="plan-row"><span class="lbl">1 month</span><span class="val hi">$1,500 · 100k flash limit</span></div>
+      </div>
+      <button class="plan-btn" onclick="openModal('lite')">Buy Now</button>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-name">Enterprise License</div>
+      <div class="plan-from">Starting from</div>
+      <div class="plan-price">$500 <span>/ day</span></div>
+      <div class="plan-rows">
+        <div class="plan-row"><span class="lbl">1 day</span><span class="val">$500 · 25k flash limit</span></div>
+        <div class="plan-row"><span class="lbl">7 days</span><span class="val">$1,500 · 150k flash limit</span></div>
+        <div class="plan-row"><span class="lbl">1 month</span><span class="val hi">$4,500 · 450k flash limit</span></div>
+      </div>
+      <button class="plan-btn" onclick="openModal('enterprise')">Buy Now</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FAQ -->
+<div id="faq" class="section">
+  <div class="sec-label">FAQ</div>
+  <div class="sec-title">Frequently Asked Questions</div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-q">Is Flash USDT transferable?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">Yes, to any wallet.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is there an expiration date of the flashed values?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">Yes, they expire after 365 days.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How many "jumps"?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">There's no limit. Once transferred, the new owner can transfer, assign and so on. This thing of jump limit does not exist.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is there any demo available?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">For customers really interested in the tool but with monetary or trust issues we have a Trial Offer.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">After purchasing my license, is it just activate it and send flash to any wallet?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">Yes, it's as simple as that.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can it be used for p2p?<svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="faq-a">Absolutely, it's the most recommended practice.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SPECIAL OFFER -->
+<div class="offer-band">
+  <div class="sec-label" style="margin-bottom:12px">Special Offer</div>
+  <h2>Get started today and unlock the full potential</h2>
+  <p>Trial License   loaded with <strong>300 Flash USDT</strong> for only <strong>$65 daily license</strong>.</p>
+  <button class="btn-primary" onclick="openModal('lite')">Claim Offer</button>
+</div>
+
+<!-- FOOTER -->
+<footer>© 2025 USDTFlasher.com   All rights reserved</footer>
+
+
+<!-- ═══════ MODAL ═══════ -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+
+    <div class="m-hdr">
+      <div>
+        <div class="m-plan-lbl" id="m-label">LICENSE PLAN</div>
+        <div class="m-plan-name" id="m-name">Lite License</div>
+      </div>
+      <button class="m-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="dur-tabs">
+      <button class="dur-tab active" onclick="selectDur(0,this)">1 day<span class="dur-sav">&nbsp;</span></button>
+      <button class="dur-tab" onclick="selectDur(1,this)">7 days<span class="dur-sav" id="sav7">save ~29%</span></button>
+      <button class="dur-tab" onclick="selectDur(2,this)">1 month<span class="dur-sav" id="sav30">save ~50%</span></button>
+    </div>
+
+    <div class="order-box">
+      <div class="ob-row"><span class="ol">Plan</span><span class="ov" id="os-plan">Lite License</span></div>
+      <div class="ob-row"><span class="ol">Duration</span><span class="ov" id="os-dur">1 day</span></div>
+      <div class="ob-row"><span class="ol">Flash limit</span><span class="ov" id="os-limit">Limited to $1,000 in flash</span></div>
+      <div class="ob-row"><span class="ol">Validity</span><span class="ov">365 days</span></div>
+      <div class="ob-row"><span class="ol">License Value</span><span class="ov big" id="os-total">$100</span></div>
+    </div>
+
+    <div class="step-ind">
+      <div class="si done" id="si0"><div class="si-dot">1</div><span>Plan</span></div>
+      <div class="si-line done" id="sl0"></div>
+      <div class="si active" id="si1"><div class="si-dot">2</div><span>Network</span></div>
+      <div class="si-line" id="sl1"></div>
+      <div class="si" id="si2"><div class="si-dot">3</div><span>Pay</span></div>
+    </div>
+
+    <!-- SCREEN: network -->
+    <div class="m-screen" id="screen-net">
+      <div class="net-label">Select payment network</div>
+      <div class="net-grid">
+        <div class="net-card active" onclick="selectNet('eth')" id="net-eth">
+          <div class="net-ico" style="background:rgba(98,126,234,.12)">
+            <img width="22" height="22" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png" alt="Ethereum">
+          </div>
+          <div class="net-name">Ethereum</div>
+          <div class="net-sub">USDT · USDC<br>ERC-20</div>
+        </div>
+        <div class="net-card" onclick="selectNet('bnb')" id="net-bnb">
+          <div class="net-ico" style="background:rgba(240,185,11,.1)">
+            <img width="22" height="22" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png" alt="BNB Chain">
+          </div>
+          <div class="net-name">BNB Chain</div>
+          <div class="net-sub">USDT · USDC<br>BEP-20</div>
+        </div>
+        <div class="net-card" onclick="selectNet('tron')" id="net-tron">
+          <div class="net-ico" style="background:rgba(226,58,58,.1)">
+            <img width="22" height="22" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/tron/info/logo.png" alt="Tron">
+          </div>
+          <div class="net-name">Tron</div>
+          <div class="net-sub">USDT · USDC<br>TRC-20</div>
+        </div>
+        <div class="net-card" onclick="selectNet('btc')" id="net-btc">
+          <div class="net-ico" style="background:rgba(247,147,26,.1)">
+            <img width="22" height="22" src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoin/info/logo.png" alt="Bitcoin">
+          </div>
+          <div class="net-name">Bitcoin</div>
+          <div class="net-sub">BTC only<br>Native</div>
+        </div>
+      </div>
+
+      <div id="token-area">
+        <div class="net-label">Select token</div>
+        <div class="tok-row">
+          <button class="tok-btn active" onclick="selectTok('USDT',this)">USDT</button>
+          <button class="tok-btn" onclick="selectTok('USDC',this)">USDC</button>
+        </div>
+        <div class="tok-note" id="tok-note">Tether USD (USDT) on Ethereum</div>
+      </div>
+
+      <button class="next-btn" onclick="goToPay()">Continue to payment</button>
+    </div>
+
+    <!-- SCREEN: payment -->
+    <div class="m-screen" id="screen-pay" style="display:none">
+      <div class="center">
+        <div class="pay-badge"><strong id="pb-net">ETH</strong>&nbsp;·&nbsp;<strong id="pb-tok">USDT</strong></div><br>
+        <div class="qr-outer">
+          <canvas id="qr-canvas" width="156" height="156"></canvas>
+        </div>
+      </div>
+
+      <!-- EXACT AMOUNT   primary CTA of the pay screen -->
+      <div class="exact-amount-box">
+        <div class="exact-amount-inner">
+          <div>
+            <div class="exact-amount-val" id="pay-exact-amount">100.023</div>
+            <div class="exact-note">Send this <strong>exact</strong> amount   it identifies your order</div>
+          </div>
+          <div class="exact-amount-tok" id="pay-exact-tok">USDT</div>
+        </div>
+      </div>
+
+      <!-- TX ID -->
+      <div class="txid-box">
+        <div>
+          <div class="txid-label">Order reference</div>
+          <div class="txid-val" id="pay-txid">UF-100023-ETH</div>
+        </div>
+        <button class="copy-btn" id="copy-txid-btn" onclick="copyTxid()" style="width:auto;margin:0;padding:6px 12px;font-size:11px">Copy</button>
+      </div>
+
+      <div class="addr-box">
+        <div class="addr-lbl">Send to this address</div>
+        <div class="addr-val" id="pay-addr"> </div>
+        <button class="copy-btn" id="copy-addr-btn" onclick="copyAddr()">Copy address</button>
+      </div>
+
+      <div class="warn-box">
+        <strong>Important   read before sending</strong>
+        Send <strong id="warn-exact">exactly 100.023 USDT</strong> on the <strong id="warn-net">Ethereum (ERC-20)</strong> network. The decimal amount identifies your order   sending a rounded or different amount will delay confirmation. Wrong network means permanent loss of funds.
+      </div>
+
+      <div class="pay-footer">
+        <div class="pay-timer">Session expires in <span id="timer">29:59</span></div>
+        <button class="back-btn" onclick="goBack()">Change network</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const PLANS = {
+  lite:       {name:'Lite License',       label:'LITE LICENSE',       prices:[100,500,1500],    limits:['Limited to $1,000 in flash','Limited to $10,000 in flash','Limited to $100,000 in flash']},
+  enterprise: {name:'Enterprise License', label:'ENTERPRISE LICENSE', prices:[500,1500,4500],   limits:['Limited to $25,000 in flash','Limited to $150,000 in flash','Limited to $450,000 in flash']},
+  elite:      {name:'Elite License',      label:'ELITE LICENSE',      prices:[1500,4500,15000], limits:['Limited to $500,000 in flash','Limited to $10M in flash','Limited to $150M in flash']},
+};
+const DUR = ['1 day','7 days','1 month'];
+const ADDRS = {
+  eth:  '0xF2AD8B81F760967c91B2aa246C59B3e629E70620',
+  bnb:  '0xF2AD8B81F760967c91B2aa246C59B3e629E70620',
+  tron: 'TUMMecXx8mR6Hei7pMTop5tTQWxhogiKHy',
+  btc:  'bc1qkwydhvdjj4uqpqvfcx2hlq6k59dqdakxc6dy8s',
+};
+const NET_NAMES = {eth:'Ethereum (ERC-20)',bnb:'BNB Chain (BEP-20)',tron:'Tron (TRC-20)',btc:'Bitcoin'};
+const NET_SHORT = {eth:'ETH',bnb:'BNB',tron:'TRX',btc:'BTC'};
+const BTC_PRICE_APIS = [
+  async () => {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd', {cache:'no-store'});
+    if(!res.ok) throw new Error('CoinGecko price request failed');
+    const data = await res.json();
+    return Number(data?.bitcoin?.usd);
+  },
+  async () => {
+    const res = await fetch('https://api.kraken.com/0/public/Ticker?pair=XBTUSD', {cache:'no-store'});
+    if(!res.ok) throw new Error('Kraken price request failed');
+    const data = await res.json();
+    return Number(data?.result?.XXBTZUSD?.c?.[0]);
+  }
+];
+
+let cPlan='lite', cDur=0, cNet='eth', cTok='USDT', timerID=null;
+let currentExactAmount='', currentTxid='';
+
+async function fetchBtcUsdPrice(){
+  for(const getPrice of BTC_PRICE_APIS){
+    try{
+      const price = await getPrice();
+      if(Number.isFinite(price) && price > 0) return price;
+    }catch(e){ /* Try the next public price source. */ }
+  }
+  throw new Error('Unable to fetch the current BTC/USD price');
+}
+
+/* Generate a unique amount. BTC is quoted from the USD license value. */
+function genExactAmount(basePrice, btcUsdPrice=null) {
+  const offsetUsd = (Math.floor(Math.random() * 46) + 10) / 1000; // $0.010 to $0.055
+  const exactUsd = basePrice + offsetUsd;
+  return btcUsdPrice ? (exactUsd / btcUsdPrice).toFixed(8) : exactUsd.toFixed(3);
+}
+
+function genTxid(exactAmount, net) {
+  // e.g. UF-100023-ETH  (removes the decimal dot from amount)
+  const amtCode = exactAmount.replace('.','');
+  return 'UF-' + amtCode + '-' + NET_SHORT[net];
+}
+
+/* FAQ */
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const was = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!was) item.classList.add('open');
+  });
+});
+
+function fmt(n){return '$' + n.toLocaleString();}
+
+function openModal(plan){
+  cPlan=plan; cDur=0; cNet='eth'; cTok='USDT';
+  document.querySelectorAll('.dur-tab').forEach((t,i) => t.classList.toggle('active', i===0));
+  document.querySelectorAll('.tok-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.querySelectorAll('.net-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('net-eth').classList.add('active');
+  document.getElementById('token-area').style.display = 'block';
+  updateTokNote();
+  showScreen('net');
+  updateSummary();
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow = '';
+  if(timerID){clearInterval(timerID); timerID=null;}
+}
+function handleOverlayClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
+
+function selectDur(idx, el){
+  cDur = idx;
+  document.querySelectorAll('.dur-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  updateSummary();
+}
+function updateSummary(){
+  const p = PLANS[cPlan], d = cDur;
+  document.getElementById('m-label').textContent = p.label;
+  document.getElementById('m-name').textContent = p.name;
+  document.getElementById('os-plan').textContent = p.name;
+  document.getElementById('os-dur').textContent = DUR[d];
+  document.getElementById('os-limit').textContent = p.limits[d];
+  document.getElementById('os-total').textContent = fmt(p.prices[d]);
+  const b = p.prices[0];
+  document.getElementById('sav7').textContent = 'save ~' + Math.round((1 - p.prices[1]/7/b)*100) + '%';
+  document.getElementById('sav30').textContent = 'save ~' + Math.round((1 - p.prices[2]/30/b)*100) + '%';
+}
+
+function selectNet(net){
+  cNet = net;
+  document.querySelectorAll('.net-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('net-' + net).classList.add('active');
+  const isBtc = net === 'btc';
+  document.getElementById('token-area').style.display = isBtc ? 'none' : 'block';
+  if(!isBtc) updateTokNote();
+}
+function selectTok(tok, el){
+  cTok = tok;
+  document.querySelectorAll('.tok-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  updateTokNote();
+}
+function updateTokNote(){
+  if(cNet === 'btc') return;
+  const net = NET_NAMES[cNet].split(' ')[0];
+  document.getElementById('tok-note').textContent = (cTok==='USDT' ? 'Tether USD' : 'USD Coin') + ' (' + cTok + ') on ' + net;
+}
+
+function showScreen(name){
+  document.getElementById('screen-net').style.display = name==='net' ? 'block' : 'none';
+  document.getElementById('screen-pay').style.display = name==='pay' ? 'block' : 'none';
+  document.getElementById('si1').className = 'si ' + (name==='net' ? 'active' : 'done');
+  document.getElementById('si2').className = 'si ' + (name==='pay' ? 'active' : '');
+  document.getElementById('sl1').className = 'si-line' + (name==='pay' ? ' done' : '');
+}
+
+async function goToPay(){
+  const tok = cNet === 'btc' ? 'BTC' : cTok;
+  const addr = ADDRS[cNet];
+  const basePrice = PLANS[cPlan].prices[cDur];
+  const continueBtn = document.querySelector('#screen-net .next-btn');
+  let btcUsdPrice = null;
+
+  if(cNet === 'btc'){
+    continueBtn.disabled = true;
+    continueBtn.textContent = 'Fetching BTC price...';
+    try{
+      btcUsdPrice = await fetchBtcUsdPrice();
+    }catch(e){
+      alert('Could not fetch the current BTC/USD price. Please try again.');
+      return;
+    }finally{
+      continueBtn.disabled = false;
+      continueBtn.textContent = 'Continue to payment';
+    }
+  }
+
+  // Generate unique exact amount as tx identifier
+  const exactAmt = genExactAmount(basePrice, btcUsdPrice);
+  const txid = genTxid(exactAmt, cNet);
+  currentExactAmount = exactAmt;
+  currentTxid = txid;
+
+  // Update pay screen
+  document.getElementById('pb-net').textContent = NET_SHORT[cNet];
+  document.getElementById('pb-tok').textContent = tok;
+  document.getElementById('pay-exact-amount').textContent = exactAmt;
+  document.getElementById('pay-exact-tok').textContent = tok;
+  const exactNote = document.querySelector('.exact-note');
+  exactNote.innerHTML = cNet === 'btc'
+    ? 'Send this <strong>exact</strong> amount approximately $' + (Number(exactAmt) * btcUsdPrice).toFixed(2) + ' USD at $' + btcUsdPrice.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + '/BTC'
+    : 'Send this <strong>exact</strong> amount it identifies your order';
+  document.getElementById('pay-txid').textContent = txid;
+  document.getElementById('pay-addr').textContent = addr;
+
+  const warnExact = 'exactly ' + exactAmt + ' ' + tok;
+  document.getElementById('warn-exact').textContent = warnExact;
+  document.getElementById('warn-net').textContent = NET_NAMES[cNet];
+
+  // Reset copy buttons
+  document.getElementById('copy-addr-btn').textContent = 'Copy address';
+  document.getElementById('copy-addr-btn').classList.remove('copied');
+  document.getElementById('copy-txid-btn').textContent = 'Copy';
+  document.getElementById('copy-txid-btn').classList.remove('copied');
+
+  // QR from address, including the BTC amount when paying on Bitcoin.
+  const qrText = cNet === 'btc' ? 'bitcoin:' + addr + '?amount=' + exactAmt : addr;
+  const canvas = document.getElementById('qr-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,156,156);
+  try{
+    const wrap = document.createElement('div');
+    new QRCode(wrap, {text: qrText, width:156, height:156, colorDark:'#000', colorLight:'#fff'});
+    setTimeout(() => {
+      const img = wrap.querySelector('img');
+      if(img){const i=new Image(); i.onload=()=>ctx.drawImage(i,0,0,156,156); i.src=img.src;}
+    }, 100);
+  } catch(e){ drawFallbackQR(ctx, qrText, 156); }
+
+  showScreen('pay');
+  startTimer(30*60);
+}
+
+function drawFallbackQR(ctx, addr, sz){
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,sz,sz);
+  ctx.fillStyle='#000';
+  const seed = addr.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const cells=25, cs=sz/cells;
+  for(let r=0;r<cells;r++) for(let c=0;c<cells;c++){
+    const h=(seed*(r*37+c*53))%100;
+    if(h<45||(r<7&&c<7)||(r<7&&c>cells-8)||(r>cells-8&&c<7)) ctx.fillRect(c*cs,r*cs,cs,cs);
+  }
+  ctx.fillStyle='#fff';
+  [[1,1,5,5],[cells-6,1,5,5],[1,cells-6,5,5]].forEach(([x,y,w,h])=>ctx.fillRect(x*cs,y*cs,w*cs,h*cs));
+  ctx.fillStyle='#000';
+  [[2,2,3,3],[cells-5,2,3,3],[2,cells-5,3,3]].forEach(([x,y,w,h])=>ctx.fillRect(x*cs,y*cs,w*cs,h*cs));
+}
+
+function copyAddr(){
+  const btn = document.getElementById('copy-addr-btn');
+  navigator.clipboard.writeText(document.getElementById('pay-addr').textContent).catch(()=>{});
+  btn.textContent='Copied!'; btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='Copy address'; btn.classList.remove('copied');}, 2200);
+}
+function copyTxid(){
+  const btn = document.getElementById('copy-txid-btn');
+  navigator.clipboard.writeText(currentTxid).catch(()=>{});
+  btn.textContent='Copied!'; btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='Copy'; btn.classList.remove('copied');}, 2200);
+}
+
+function goBack(){
+  showScreen('net');
+  if(timerID){clearInterval(timerID); timerID=null;}
+}
+function startTimer(secs){
+  if(timerID) clearInterval(timerID);
+  let s = secs;
+  const el = document.getElementById('timer');
+  function tick(){
+    const m=Math.floor(s/60), sc=s%60;
+    el.textContent = String(m).padStart(2,'0') + ':' + String(sc).padStart(2,'0');
+    if(s<=0){clearInterval(timerID); el.textContent='expired';}
+    s--;
+  }
+  tick(); timerID = setInterval(tick, 1000);
+}
+</script>
+</body>
+</html>
