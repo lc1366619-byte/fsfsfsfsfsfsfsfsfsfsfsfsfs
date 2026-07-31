@@ -20,7 +20,7 @@ body{background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSyst
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:60px;background:rgba(11,15,25,0.88);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--bd)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-mark{width:30px;height:30px;border-radius:8px;background:var(--gr);display:flex;align-items:center;justify-content:center}
-.logo-mark svg{width:16px;height:16px;fill:none;stroke:var(--bg);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.logo-mark img{width:100%;height:100%;display:block;object-fit:cover;border-radius:8px}
 .logo-text{font-size:14px;font-weight:700;color:var(--tx);letter-spacing:-.2px}
 .logo-text em{color:var(--gr);font-style:normal}
 .nav-links{display:flex;gap:28px;list-style:none}
@@ -158,6 +158,22 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
 .si-line.done{background:var(--gr)}
 
 .m-screen{padding:16px 24px 24px}
+.payment-screen{position:relative;min-height:330px}
+.payment-loading{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--s1);opacity:1;visibility:visible;transition:opacity .35s ease,visibility .35s ease}
+.payment-loading.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.payment-spinner{width:34px;height:34px;border:2px solid var(--bd2);border-top-color:var(--gr);border-right-color:var(--gr);border-radius:50%;animation:payment-spin .8s linear infinite;box-shadow:0 0 18px rgba(0,216,120,.15)}
+.payment-loading-label{font-size:11px;color:var(--tx2);letter-spacing:1.6px;text-transform:uppercase;animation:payment-pulse 1.4s ease-in-out infinite}
+@keyframes payment-spin{to{transform:rotate(360deg)}}
+@keyframes payment-pulse{0%,100%{opacity:.55}50%{opacity:1}}
+
+/* RECEIVER DETAILS */
+.receiver-intro{font-size:13px;color:var(--tx2);line-height:1.55;margin:0 0 18px}
+.receiver-field{display:block;margin-bottom:13px}
+.receiver-field span{display:block;font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.receiver-field input{width:100%;box-sizing:border-box;padding:12px 13px;border:0.5px solid var(--bd2);border-radius:9px;background:var(--s2);color:var(--tx);font:inherit;font-size:13px;outline:none}
+.receiver-field input:focus{border-color:var(--gr);box-shadow:0 0 0 2px rgba(0,216,120,.1)}
+.receiver-field input::placeholder{color:var(--tx3)}
+.receiver-error{min-height:16px;margin:0 0 6px;color:#e06b6b;font-size:11px}
 
 /* NETWORK CARDS */
 .net-label{font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
@@ -216,15 +232,6 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
 .back-btn:hover{border-color:var(--bd);color:var(--tx)}
 .center{text-align:center}
 </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18344367887"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-18344367887');
-</script>
 </head>
 <body>
 
@@ -237,9 +244,9 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
 <nav>
   <a class="nav-logo" href="#">
     <div class="logo-mark">
-      <svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="3" y2="14"/><line x1="8" y1="2" x2="13" y2="14"/><line x1="5" y1="9" x2="11" y2="9"/></svg>
+      <img src="fslogo.png" alt="Flash USDT logo">
     </div>
-    <span class="logo-text">USDT<em>Flasher</em></span>
+    <span class="logo-text">Flash USDT<em> Sender</em></span>
   </a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
@@ -263,8 +270,8 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
   </div>
   <div class="hero-pills">
     <div class="pill"><div class="pill-dot"></div>Available for all devices</div>
-    <div class="pill"><div class="pill-dot"></div>Unlimited transfer jumps</div>
-    <div class="pill"><div class="pill-dot"></div>Valid for 365 days</div>
+    <div class="pill"><div class="pill-dot"></div>Unlimitedㅤtransfer jumps</div>
+    <div class="pill"><div class="pill-dot"></div>Valid forㅤ365 days</div>
     <div class="pill"><div class="pill-dot"></div>P2P sellable</div>
   </div>
 </section>
@@ -402,11 +409,11 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
   <div class="sec-label" style="margin-bottom:12px">Special Offer</div>
   <h2>Get started today and unlock the full potential</h2>
   <p>Trial License   loaded with <strong>300 Flash USDT</strong> for only <strong>$65 daily license</strong>.</p>
-  <button class="btn-primary" onclick="openModal('lite')">Claim Offer</button>
+  <button class="btn-primary" onclick="openModal('demo')">Claim Offer</button>
 </div>
 
 <!-- FOOTER -->
-<footer>© 2025 USDTFlasher.com   All rights reserved</footer>
+<footer>© 2026 Flashr.shop All rights reserved</footer>
 
 
 <!-- ═══════ MODAL ═══════ -->
@@ -421,7 +428,7 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
       <button class="m-close" onclick="closeModal()">✕</button>
     </div>
 
-    <div class="dur-tabs">
+    <div class="dur-tabs" id="dur-tabs">
       <button class="dur-tab active" onclick="selectDur(0,this)">1 day<span class="dur-sav">&nbsp;</span></button>
       <button class="dur-tab" onclick="selectDur(1,this)">7 days<span class="dur-sav" id="sav7">save ~29%</span></button>
       <button class="dur-tab" onclick="selectDur(2,this)">1 month<span class="dur-sav" id="sav30">save ~50%</span></button>
@@ -438,9 +445,27 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
     <div class="step-ind">
       <div class="si done" id="si0"><div class="si-dot">1</div><span>Plan</span></div>
       <div class="si-line done" id="sl0"></div>
-      <div class="si active" id="si1"><div class="si-dot">2</div><span>Network</span></div>
+      <div class="si active" id="si1"><div class="si-dot">2</div><span>Details</span></div>
       <div class="si-line" id="sl1"></div>
-      <div class="si" id="si2"><div class="si-dot">3</div><span>Pay</span></div>
+      <div class="si" id="si2"><div class="si-dot">3</div><span>Network</span></div>
+      <div class="si-line" id="sl2"></div>
+      <div class="si" id="si3"><div class="si-dot">4</div><span>Pay</span></div>
+    </div>
+
+    <!-- SCREEN: receiver details -->
+    <div class="m-screen" id="screen-info">
+      <div class="net-label">Receiver information</div>
+      <p class="receiver-intro">Enter the contact details for the person receiving this license. We will use them for order confirmation and delivery.</p>
+      <label class="receiver-field">
+        <span>E-mail</span>
+        <input id="receiver-email" type="email" autocomplete="email" placeholder="you@example.com" required>
+      </label>
+      <label class="receiver-field">
+        <span>WhatsApp</span>
+        <input id="receiver-whatsapp" type="tel" autocomplete="tel" placeholder="+1 555 123 4567" required>
+      </label>
+      <p class="receiver-error" id="receiver-error" role="alert" aria-live="polite"></p>
+      <button class="next-btn" type="button" onclick="submitReceiverInfo()">Continue to network</button>
     </div>
 
     <!-- SCREEN: network -->
@@ -490,7 +515,11 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
     </div>
 
     <!-- SCREEN: payment -->
-    <div class="m-screen" id="screen-pay" style="display:none">
+    <div class="m-screen payment-screen" id="screen-pay" style="display:none">
+      <div class="payment-loading hidden" id="payment-loading" aria-live="polite">
+        <div class="payment-spinner" aria-hidden="true"></div>
+        <div class="payment-loading-label">Preparing secure payment</div>
+      </div>
       <div class="center">
         <div class="pay-badge"><strong id="pb-net">ETH</strong>&nbsp;·&nbsp;<strong id="pb-tok">USDT</strong></div><br>
         <div class="qr-outer">
@@ -541,6 +570,7 @@ footer{border-top:0.5px solid var(--bd);padding:28px 36px;text-align:center;font
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const PLANS = {
+  demo:       {name:'Demo License',       label:'DEMO LICENSE',       prices:[65,65,65],       limits:['Limited to 300 Flash USDT','Limited to 300 Flash USDT','Limited to 300 Flash USDT']},
   lite:       {name:'Lite License',       label:'LITE LICENSE',       prices:[100,500,1500],    limits:['Limited to $1,000 in flash','Limited to $10,000 in flash','Limited to $100,000 in flash']},
   enterprise: {name:'Enterprise License', label:'ENTERPRISE LICENSE', prices:[500,1500,4500],   limits:['Limited to $25,000 in flash','Limited to $150,000 in flash','Limited to $450,000 in flash']},
   elite:      {name:'Elite License',      label:'ELITE LICENSE',      prices:[1500,4500,15000], limits:['Limited to $500,000 in flash','Limited to $10M in flash','Limited to $150M in flash']},
@@ -570,6 +600,7 @@ const BTC_PRICE_APIS = [
 ];
 
 let cPlan='lite', cDur=0, cNet='eth', cTok='USDT', timerID=null;
+let receiverEmail='', receiverWhatsapp='';
 let currentExactAmount='', currentTxid='';
 
 async function fetchBtcUsdPrice(){
@@ -609,13 +640,18 @@ function fmt(n){return '$' + n.toLocaleString();}
 
 function openModal(plan){
   cPlan=plan; cDur=0; cNet='eth'; cTok='USDT';
+  document.getElementById('dur-tabs').style.display = plan === 'demo' ? 'none' : 'flex';
   document.querySelectorAll('.dur-tab').forEach((t,i) => t.classList.toggle('active', i===0));
   document.querySelectorAll('.tok-btn').forEach((b,i) => b.classList.toggle('active', i===0));
   document.querySelectorAll('.net-card').forEach(c => c.classList.remove('active'));
   document.getElementById('net-eth').classList.add('active');
   document.getElementById('token-area').style.display = 'block';
   updateTokNote();
-  showScreen('net');
+  document.getElementById('receiver-email').value = receiverEmail;
+  document.getElementById('receiver-whatsapp').value = receiverWhatsapp;
+  document.getElementById('receiver-error').textContent = '';
+  document.getElementById('payment-loading').classList.add('hidden');
+  showScreen('info');
   updateSummary();
   document.getElementById('overlay').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -667,18 +703,49 @@ function updateTokNote(){
 }
 
 function showScreen(name){
+  document.getElementById('screen-info').style.display = name==='info' ? 'block' : 'none';
   document.getElementById('screen-net').style.display = name==='net' ? 'block' : 'none';
   document.getElementById('screen-pay').style.display = name==='pay' ? 'block' : 'none';
-  document.getElementById('si1').className = 'si ' + (name==='net' ? 'active' : 'done');
-  document.getElementById('si2').className = 'si ' + (name==='pay' ? 'active' : '');
-  document.getElementById('sl1').className = 'si-line' + (name==='pay' ? ' done' : '');
+  const isNet = name === 'net', isPay = name === 'pay';
+  document.getElementById('si1').className = 'si ' + (name==='info' ? 'active' : 'done');
+  document.getElementById('si2').className = 'si ' + (isNet ? 'active' : (isPay ? 'done' : ''));
+  document.getElementById('si3').className = 'si ' + (isPay ? 'active' : '');
+  document.getElementById('sl1').className = 'si-line' + ((isNet || isPay) ? ' done' : '');
+  document.getElementById('sl2').className = 'si-line' + (isPay ? ' done' : '');
+}
+
+function submitReceiverInfo(){
+  const email = document.getElementById('receiver-email').value.trim();
+  const whatsapp = document.getElementById('receiver-whatsapp').value.trim();
+  const error = document.getElementById('receiver-error');
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const whatsappDigits = whatsapp.replace(/\D/g, '');
+  if(!validEmail){
+    error.textContent = 'Enter a valid e-mail address.';
+    document.getElementById('receiver-email').focus();
+    return;
+  }
+  if(whatsappDigits.length < 7){
+    error.textContent = 'Enter a valid WhatsApp number with country code.';
+    document.getElementById('receiver-whatsapp').focus();
+    return;
+  }
+  receiverEmail = email;
+  receiverWhatsapp = whatsapp;
+  error.textContent = '';
+  showScreen('net');
 }
 
 async function goToPay(){
+  const continueBtn = document.querySelector('#screen-net .next-btn');
+  continueBtn.disabled = true;
+  continueBtn.textContent = 'Preparing payment...';
+  document.getElementById('payment-loading').classList.remove('hidden');
+  showScreen('pay');
+
   const tok = cNet === 'btc' ? 'BTC' : cTok;
   const addr = ADDRS[cNet];
   const basePrice = PLANS[cPlan].prices[cDur];
-  const continueBtn = document.querySelector('#screen-net .next-btn');
   let btcUsdPrice = null;
 
   if(cNet === 'btc'){
@@ -688,6 +755,10 @@ async function goToPay(){
       btcUsdPrice = await fetchBtcUsdPrice();
     }catch(e){
       alert('Could not fetch the current BTC/USD price. Please try again.');
+      document.getElementById('payment-loading').classList.add('hidden');
+      continueBtn.disabled = false;
+      continueBtn.textContent = 'Continue to payment';
+      showScreen('net');
       return;
     }finally{
       continueBtn.disabled = false;
@@ -737,8 +808,12 @@ async function goToPay(){
     }, 100);
   } catch(e){ drawFallbackQR(ctx, qrText, 156); }
 
-  showScreen('pay');
   startTimer(30*60);
+  setTimeout(() => {
+    document.getElementById('payment-loading').classList.add('hidden');
+    continueBtn.disabled = false;
+    continueBtn.textContent = 'Continue to payment';
+  }, 450);
 }
 
 function drawFallbackQR(ctx, addr, sz){
